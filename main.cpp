@@ -14,13 +14,12 @@ int main()
 		std::cout << i << "  ";
 	}
 
-	std::cout << "my vector" << std::endl;
-	std::cout<< "ftnum = ";
+	std::cout << std::endl; std::cout << "my vector = ";
 
 	// ranged loop
   	for (const int& i : ftnum) {
 		std::cout << i << "  ";
 	}
 
-
+	std::cout << std::endl;
 }
