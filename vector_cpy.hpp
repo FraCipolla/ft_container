@@ -188,18 +188,8 @@ namespace ft
 	const_reference operator[](size_type n) const { return (*(_buffer_start + n)); };
     reference front () { return (*(_buffer_start)); };
     const_reference front () const { return (*(_buffer_start)); };
-    reference back ()
-	{
-		if (this->empty())
-			std::cout << "call back on empty container: undefined behavior" << std::endl;
-		return (*(_current_end - 1)); 
-	};
-    const_reference back () const
-	{
-		if (this->empty())
-			std::cout << "call back on empty container: undefined behavior" << std::endl;
-		return (*(_current_end - 1)); 
-	};
+    reference back () { return (*(_current_end - 1)); };
+    const_reference back () const { return (*(_current_end - 1)); };
 	reference at (size_type n)
 	{
 		if (n >= this->size())

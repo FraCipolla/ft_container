@@ -26,10 +26,7 @@ template <typename T>
 					_elem(elem)
 				{}
 			// explicit random_access_iterator(iterator_category el) : _elem(el) {}
-			random_access_iterator(const random_access_iterator& op)
-                :
-                    _elem(op._elem)
-                {}
+			random_access_iterator(const random_access_iterator& op) { *this = op; };
 			// operator random_access_iterator< const T >() const { return this->_elem; }
 			random_access_iterator &operator=(const random_access_iterator& op)
                 {
@@ -83,7 +80,8 @@ template <typename T>
 			{ 
 				return (random_access_iterator<const T>(this->_elem));
 			}
-		
+
+			void setElem(pointer el) { this->_elem = el; };
 		protected:
 			pointer _elem;
 	};

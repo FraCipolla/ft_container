@@ -32,7 +32,7 @@ template <class Iterator>
 	
 	// member functions
 	iterator_type base() const { return (_elem); };
-	operator reverse_iterator< const Iterator >() const { return this->current; }
+	// operator reverse_iterator< const Iterator >() const { return this->current; }
 	reference operator*() const
 	{
 		iterator_type ret = _elem;
@@ -123,11 +123,11 @@ template <class Iterator>
     template <class Iterator>
         typename reverse_iterator<Iterator>::difference_type operator- (
             const reverse_iterator<Iterator>& lhs,
-            const reverse_iterator<Iterator>& rhs) { return (lhs.base() - rhs.base()); }
+            const reverse_iterator<Iterator>& rhs) { return (rhs.base() - lhs.base()); }
 
     template <class Iterator_L, class Iterator_R>
         bool operator- (const reverse_iterator<Iterator_L>& lhs,
-                        const reverse_iterator<Iterator_R>& rhs) { return (lhs.base() - rhs.base()); }
+                        const reverse_iterator<Iterator_R>& rhs) { return (rhs.base() - lhs.base()); }
 
     template <class InputIterator1, class InputIterator2>
         bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1,

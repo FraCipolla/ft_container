@@ -1,25 +1,21 @@
-#include "vector.hpp"
-#include <vector>
+#include "stack.hpp"
+// #include "vector.hpp"
+// #include "random_access_iterator.hpp"
+// #include "reverse_iterator.hpp"
+// #include "utils.hpp"
+// #include <vector>
 #include <iostream>
+
+using namespace ft;
 
 int main()
 {
-	std::vector<int> stdnum(6, 10);
-	ft::vector<int> ftnum(6, 10);
+	stack<int>  st;
 
-	std::cout << "stdnum = ";
+    std::cout << "Empty:" << (st.empty() ? "true" : "false") << std::endl;
+    st.push(34);
+    std::cout << "Size:" << st.size() << std::endl;
+    std::cout << "Empty:" << (st.empty() ? "true" : "false") << std::endl;
+    std::cout << "Top:" << st.top() << std::endl;
 
-	// ranged loop
-  	for (const int& i : stdnum) {
-		std::cout << i << "  ";
-	}
-
-	std::cout << std::endl; std::cout << "my vector = ";
-
-	// ranged loop
-  	for (const int& i : ftnum) {
-		std::cout << i << "  ";
-	}
-
-	std::cout << std::endl;
 }

@@ -1,5 +1,5 @@
-#ifndef VECTOR_HPP
-#define VECTOR_HPP
+#ifndef DEQUE_HPP
+#define DEQUE_HPP
 
 #include "reverse_iterator.hpp"
 #include "random_access_iterator.hpp"
@@ -11,16 +11,16 @@
 
 namespace ft
 {
-	template <class T, class Allocator = std::allocator<T> >
-	class vector {
+	template < class T, class Allocator = std::allocator<T> >
+	class deque {
+	
+	public:
 
-    public:
-
-    // typedefs
-    typedef T 														value_type;
+	typedef T 														value_type;
     typedef Allocator 												allocator_type;
     typedef typename Allocator::reference 							reference;
     typedef typename Allocator::const_reference 					const_reference;
+    typedef typename Allocator::size_type 							size_type;
     typedef typename Allocator::pointer 							pointer;
     typedef typename Allocator::const_pointer 						const_pointer;
 	typedef typename ft::random_access_iterator<value_type>			iterator;
@@ -28,25 +28,24 @@ namespace ft
 	typedef typename ft::reverse_iterator<iterator>					reverse_iterator;
     typedef typename ft::reverse_iterator<const_iterator>			const_reverse_iterator;
     typedef typename ft::iterator_traits<iterator>::difference_type	difference_type;
-    typedef typename Allocator::size_type 							size_type;
-
+	
 	private:
     	allocator_type	_buffer_size;
     	pointer			_buffer_start;
     	pointer			_current_end;
     	pointer			_end_of_buffer;
-	
+
 	public:
     // Constructor
-    explicit vector (const Allocator& alloc = Allocator())
+    explicit deque (const allocator_type& alloc = allocator_type())
 		:
 			_buffer_size(alloc),
 			_buffer_start (u_nullptr),
 			_current_end (u_nullptr),
 			_end_of_buffer (u_nullptr)
 		{}
-    // explicit vector (size_type sz);
-    explicit vector(size_type sz, const T& value = value_type(), const Allocator& alloc = Allocator()) : _buffer_size(alloc)
+    // explicit deque (size_type sz);
+    explicit deque(size_type sz, const T& value = value_type(), const Allocator& alloc = Allocator()) : _buffer_size(alloc)
 	{
 		_buffer_start = _buffer_size.allocate(sz);
 		_end_of_buffer = _buffer_start + sz;
@@ -55,7 +54,7 @@ namespace ft
 			_buffer_size.construct(_current_end, value);
 	}
     template <class InputIterator>
-    	vector(InputIterator start, InputIterator finish, const Allocator& alloc = Allocator(),
+    	deque(InputIterator start, InputIterator finish, const Allocator& alloc = Allocator(),
 		typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = u_nullptr)
 		:
 			_buffer_size(alloc)
@@ -67,7 +66,7 @@ namespace ft
 			for (; sz > 0; sz--, _current_end++)
 				_buffer_size.construct(_current_end, *start++);
 		}
-    vector(const vector& x) : _buffer_size(x._buffer_size)
+    deque(const deque& x) : _buffer_size(x._buffer_size)
 	{
 		if (this == &x || x._buffer_start == 0)
 			return ;
@@ -81,7 +80,7 @@ namespace ft
 	}
 	
 	// Destructor
-    ~vector()
+    ~deque()
 	{
 		if (_buffer_start)
 		{	
@@ -91,7 +90,7 @@ namespace ft
 	}
 
 	// Assign operator
- 	vector &operator=(const vector& x)
+ 	deque &operator=(const deque& x)
 	{
 		if (&x == this || x.size() == 0)
 			return (*this);
@@ -148,7 +147,7 @@ namespace ft
 	void reserve (size_type n)
 	{
 		if (n > this->max_size())
-			throw (std::length_error("vector::reserve"));
+			throw (std::length_error("deque::reserve"));
 		else if (n > this->capacity())
 		{
 			pointer prev_start = _buffer_start;
@@ -188,28 +187,18 @@ namespace ft
 	const_reference operator[](size_type n) const { return (*(_buffer_start + n)); };
     reference front () { return (*(_buffer_start)); };
     const_reference front () const { return (*(_buffer_start)); };
-    reference back ()
-	{
-		if (this->empty())
-			std::cout << "call back on empty container: undefined behavior" << std::endl;
-		return (*(_current_end - 1)); 
-	};
-    const_reference back () const
-	{
-		if (this->empty())
-			std::cout << "call back on empty container: undefined behavior" << std::endl;
-		return (*(_current_end - 1)); 
-	};
+    reference back () { return (*(_current_end - 1)); };
+    const_reference back () const { return (*(_current_end - 1)); };
 	reference at (size_type n)
 	{
 		if (n >= this->size())
-			throw (std::out_of_range("vector::at"));
+			throw (std::out_of_range("deque::at"));
 		return ((*this)[n]);
 	}
 	const_reference at (size_type n) const
 	{
 		if (n >= this->size())
-			throw (std::out_of_range("vector::at"));
+			throw (std::out_of_range("deque::at"));
 		return ((*this)[n]);
 	}
 
@@ -267,6 +256,8 @@ namespace ft
 		_current_end++;
 	}
     void pop_back () { _buffer_size.destroy(&this->back()); _current_end--; };
+	// template <class... Args> 
+	// 	void emplace_back (Args&&... args) { this->push_back(args); };
 
     iterator insert (iterator position, const T& c)
 	{
@@ -310,7 +301,7 @@ namespace ft
 		if (n == 0)
 			return ;
 		if (n > this->max_size())
-			throw (std::length_error("vector::insert (fill)"));
+			throw (std::length_error("deque::insert (fill)"));
 		size_type pos_len = &(*position) - _buffer_start;
 		if (this->size() + n < this->capacity())
 		{
@@ -447,7 +438,7 @@ namespace ft
 			return (iterator(ret));
 	}
 
-    void swap (vector<T, Allocator>& x)
+    void swap (deque<T, Allocator>& x)
 	{
 		if (x == *this)
 			return ;
@@ -477,14 +468,14 @@ namespace ft
 	}
   };
 
-	// Nonmember vector Operators
+	// Nonmember deque Operators
 	template <class T, class Allocator>
-	bool operator==(const ft::vector<T,Allocator>& x, const ft::vector <T,Allocator>& y)
+	bool operator==(const ft::deque<T,Allocator>& x, const ft::deque <T,Allocator>& y)
 	{
 		if (x.size() != y.size())
 			return (false);
-		typename ft::vector<T>::const_iterator a = x.begin();
-		typename ft::vector<T>::const_iterator b = y.begin();
+		typename ft::deque<T>::const_iterator a = x.begin();
+		typename ft::deque<T>::const_iterator b = y.begin();
 		while (a != x.end())
 		{
 			if (b == y.end() || *a != *b)
@@ -495,23 +486,23 @@ namespace ft
 		return true;
 	}
 	template <class T, class Allocator>
-	    bool operator!=(const vector<T,Allocator>& x, const vector <T,Allocator>& y) { return (!(x == y)); };
+	    bool operator!=(const deque<T,Allocator>& x, const deque <T,Allocator>& y) { return (!(x == y)); };
 	template <class T, class Allocator>
-	    bool operator<(const vector<T,Allocator>& x, const vector<T,Allocator>& y)
+	    bool operator<(const deque<T,Allocator>& x, const deque<T,Allocator>& y)
 		{
 			return (ft::lexicographical_compare(x.begin(), x.end(), y.begin(), y.end()));
 		}
 	template <class T, class Allocator>
-	    bool operator<=(const vector<T,Allocator>& x, const vector<T,Allocator>& y) { return (!(y < x)); };
+	    bool operator<=(const deque<T,Allocator>& x, const deque<T,Allocator>& y) { return (!(y < x)); };
 	template <class T, class Allocator>
-	    bool operator>(const vector<T,Allocator>& x, const vector<T,Allocator>& y) { return (y < x); };
+	    bool operator>(const deque<T,Allocator>& x, const deque<T,Allocator>& y) { return (y < x); };
 	template <class T, class Allocator>
-	    bool operator>=(const vector<T,Allocator>& x, const vector<T,Allocator>& y) { return (!(x < y)); };
+	    bool operator>=(const deque<T,Allocator>& x, const deque<T,Allocator>& y) { return (!(x < y)); };
 
 
 // Specialized Algorithms
 template <class T, class Allocator>
-	void swap (vector<T,Allocator>& x, vector<T,Allocator>& y)
+	void swap (deque<T,Allocator>& x, deque<T,Allocator>& y)
 	{
 		x.swap(y);
 	}
