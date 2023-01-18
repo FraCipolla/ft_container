@@ -45,7 +45,7 @@ class RedBlackTree {
   void inOrderHelper(NodePtr node) {
     if (node != TNULL) {
       inOrderHelper(node->left);
-      cout << node->data << " ";
+      std::cout << node->data << " ";
       inOrderHelper(node->right);
     }
   }
@@ -171,7 +171,7 @@ class RedBlackTree {
       x = z->left;
       rbTransplant(z, z->left);
     } else {
-      y = minimum(z->right);
+      y = min(z->right);
       y_original_color = y->color;
       x = y->right;
       if (y->parent == z) {
