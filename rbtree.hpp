@@ -171,7 +171,7 @@ class RedBlackTree {
       x = z->left;
       rbTransplant(z, z->left);
     } else {
-      y = min(z->right);
+      y = minimum(z->right);
       y_original_color = y->color;
       x = y->right;
       if (y->parent == z) {

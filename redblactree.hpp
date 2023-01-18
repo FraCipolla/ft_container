@@ -367,7 +367,7 @@ namespace ft
 			}
 			else
 			{
-    			y = minimum(z->_right);
+    			y = min(z->_right);
 				y_original_color = y->_color;
 				x = y->_right;
 				if (y->_parent == z)
