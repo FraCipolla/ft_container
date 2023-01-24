@@ -22,26 +22,19 @@
 namespace ft
 {
 	template <class T, class Compare = std::less<T>, class Alloc = std::allocator<T> >
-class set {
-public:
-	typedef struct				s_node
-	{
-# if __APPLE__
-		const T					data;
-		bool					color;
-		struct s_node *			left;
-		struct s_node *			right;
-		struct s_node *			parent;
-# else
-		const T					data;
-		struct s_node *			left;
-		struct s_node *			right;
-		struct s_node *			parent;
-		bool					color;
-# endif
+	class set {
+	public:
+		typedef struct				s_node
+		{
+			const T					data;
+			struct s_node *			left;
+			struct s_node *			right;
+			struct s_node *			parent;
+			bool					color;
 
-		s_node (const T data) : data(data) {}
-	}	node;
+			s_node (const T data) : data(data) {}
+		}	node;
+
 	template <bool IsConst>
 	class setIterator
 	{
@@ -51,34 +44,28 @@ public:
 			typedef	std::ptrdiff_t		difference_type;
 			typedef	std::size_t			size_type;
 					
-		// -structors
 		setIterator	(void) { _ptr = NULL; }
 		setIterator	(node_type * const ptr) { _ptr = ptr; }
 		~setIterator (void) {}
-		
+
 		template <bool B>
 			setIterator(const setIterator<B> & x) { _ptr = x.getPtr(); }
 
-		// Assignment
 		setIterator &operator=(const setIterator & x) { _ptr = x.getPtr(); return (*this); }
 		
-		// Comparison
 		template <bool B>
 			bool operator==(const setIterator<B> & x) const { return (_ptr == x.getPtr()); }
 		template <bool B>
 			bool operator!=(const setIterator<B> & x) const	{ return (_ptr != x.getPtr()); }
 		
-		// -crementation
 		setIterator &operator++	(void) { this->nextNode(); return (*this); }
 		setIterator &operator--	(void) { this->prevNode(); return (*this); }
 		setIterator	operator++	(int) { setIterator<IsConst> x(*this); this->nextNode(); return (x); }
 		setIterator	operator--	(int) { setIterator<IsConst> x(*this); this->prevNode(); return (x); }
-		
-		// Dereference
+
 		value_type &operator*(void) const { return (_ptr->data); }
 		value_type *operator->(void) const { return (&_ptr->data); }
 		
-		// Member functions
 		node_type *getPtr (void) const { return (_ptr); }
 
 	private:
@@ -138,6 +125,7 @@ public:
 	typedef	typename setIterator<false>::difference_type	difference_type;
 	typedef	typename setIterator<false>::size_type			size_type;
 
+	// Costructor
 	explicit set (const key_compare & comp = key_compare(), const allocator_type & alloc = allocator_type())
 	{
 		_alloc = alloc;
@@ -146,26 +134,22 @@ public:
 	}
 
 	template <class InputIterator>
-	set (InputIterator first, InputIterator last, const key_compare & comp = key_compare(), const allocator_type & alloc = allocator_type(),
-	typename ft::enable_if<!ft::is_same<InputIterator, int>::value>::type* = 0)
-	{
-		_alloc = alloc;
-		_comp = comp;
-		this->_new_nil_node();
+		set (InputIterator first, InputIterator last, const key_compare & comp = key_compare(), const allocator_type & alloc = allocator_type(),
+		typename ft::enable_if<!ft::is_same<InputIterator, int>::value>::type* = 0)
+		{
+			_alloc = alloc;
+			_comp = comp;
+			this->_new_nil_node();
 
-		while (first != last)
-			this->insert(*first++);
-	}
+			while (first != last)
+				this->insert(*first++);
+		}
 
 	set (const set & x)
 	{
 		this->_new_nil_node();
 		*this = x;
 	}
-
-	//////////////////////////////
-	// Destructors
-	//////////////////////////////
 
 	~set (void)
 	{
@@ -174,10 +158,7 @@ public:
 		_alloc.deallocate(_nil, 1);
 	}
 
-	//////////////////////////////
 	// Assignment operator
-	//////////////////////////////
-
 	set & operator= (const set & x)
 	{
 		if (this == &x)
@@ -192,10 +173,7 @@ public:
 		return (*this);
 	}
 
-	//////////////////////////////
 	// Iterators
-	//////////////////////////////
-
 	iterator begin (void)
 	{
 		return (iterator(this->_leftmost(_nil->right)));
@@ -216,10 +194,7 @@ public:
 		return (const_iterator(_nil));
 	}
 
-	//////////////////////////////
 	// Reverse iterators
-	//////////////////////////////
-
 	reverse_iterator rbegin (void)
 	{
 		return (reverse_iterator(_nil));
@@ -240,14 +215,8 @@ public:
 		return (const_reverse_iterator(this->_leftmost(_nil->right)));
 	}
 
-	//////////////////////////////
 	// Capacity
-	//////////////////////////////
-
-	bool empty (void) const
-	{
-		return (_nil == _nil->right);
-	}
+	bool empty (void) const { return (_nil == _nil->right); };
 
 	size_type size (void) const
 	{
@@ -257,14 +226,7 @@ public:
 		return (n);
 	}
 
-	size_type max_size (void) const
-	{
-		return (_alloc.max_size());
-	}
-
-	//////////////////////////////
-	// Insertion modifiers
-	//////////////////////////////
+	size_type max_size (void) const { return (_alloc.max_size()); };
 
 	ft::pair<iterator,bool> insert (const value_type & val)
 	{
@@ -288,16 +250,12 @@ public:
 	}
 
 	template <class InputIterator>
-	void insert (InputIterator first, InputIterator last,
-	typename ft::enable_if<!ft::is_same<InputIterator, int>::value>::type* = 0)
-	{
-		while (first != last)
-			this->insert(*first++);
-	}
-
-	//////////////////////////////
-	// Erasure modifiers
-	//////////////////////////////
+		void insert (InputIterator first, InputIterator last,
+		typename ft::enable_if<!ft::is_same<InputIterator, int>::value>::type* = 0)
+		{
+			while (first != last)
+				this->insert(*first++);
+		}
 
 	void erase (iterator position)
 	{
@@ -340,10 +298,6 @@ public:
 			this->erase(it);
 	}
 
-	//////////////////////////////
-	// Common modifiers
-	//////////////////////////////
-
 	void swap (set & x)
 	{
 		ft::swap(_alloc, x._alloc);
@@ -358,24 +312,8 @@ public:
 			this->erase(it);
 	}
 
-	//////////////////////////////
-	// Observers
-	//////////////////////////////
-
-	key_compare key_comp (void) const
-	{
-		return (key_compare());
-	}
-
-	value_compare value_comp (void) const
-	{
-		return (key_compare());
-	}
-
-	//////////////////////////////
-	// Search operations
-	//////////////////////////////
-
+	key_compare key_comp (void) const { return (key_compare());	};
+	value_compare value_comp (void) const { return (key_compare()); };
 	iterator find (const value_type & val) const
 	{
 		if (this->count(val))
@@ -383,7 +321,6 @@ public:
 		else
 			return (this->end());
 	}
-
 	size_type count (const value_type & val) const
 	{
 		size_type n = 0;
@@ -394,11 +331,6 @@ public:
 		}
 		return (n);
 	}
-
-	//////////////////////////////
-	// Range operations
-	//////////////////////////////
-
 	iterator lower_bound (const value_type & val) const
 	{
 		iterator it = this->begin();
@@ -406,7 +338,6 @@ public:
 			it++;
 		return (it);
 	}
-
 	iterator upper_bound (const value_type & val) const
 	{
 		iterator it = this->begin();
@@ -414,26 +345,11 @@ public:
 			it++;
 		return (it);
 	}
-
 	ft::pair<iterator,iterator> equal_range (const value_type & val) const
-	{
-		return (ft::make_pair(this->lower_bound(val), this->upper_bound(val)));
-	}
+	{ return (ft::make_pair(this->lower_bound(val), this->upper_bound(val))); };
+	allocator_type get_allocator (void) const { return (allocator_type()); };
 
-	//////////////////////////////
-	// Allocator
-	//////////////////////////////
-
-	allocator_type get_allocator (void) const
-	{
-		return (allocator_type());
-	}
-
-	//////////////////////////////
-	// Private functions
-	//////////////////////////////
-
-private:
+	private:
 	void _new_nil_node (void)
 	{
 		_nil = _alloc.allocate(1);
@@ -566,10 +482,7 @@ private:
 		return (this->_comp(lhs, rhs) == false && this->_comp(rhs, lhs) == false);
 	}
 
-	//////////////////////////////
-	// Red and Black Tree
-	//////////////////////////////
-
+	// REDBLACKTREE
 	void _insertRB (node * x)
 	{
 		node * parent = x->parent;
@@ -723,61 +636,32 @@ private:
 		x->right = parent;
 	}
 
-	//////////////////////////////
-	// Member variables
-	//////////////////////////////
-
 	allocator_type		_alloc;
 	key_compare			_comp;
 	node *				_nil;
 }; // Set
 
-	//////////////////////////////
-	// Relational operators
-	//////////////////////////////
-
 	template <class T, class Compare, class Alloc>
-	bool operator== (const set<T,Compare,Alloc> & lhs, const set<T,Compare,Alloc> & rhs)
-	{
-		return (ft::equal(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
-	}
-
+		bool operator== (const set<T,Compare,Alloc> & lhs, const set<T,Compare,Alloc> & rhs)
+		{ return (ft::equal(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())); };
 	template <class T, class Compare, class Alloc>
-	bool operator<  (const set<T,Compare,Alloc> & lhs, const set<T,Compare,Alloc> & rhs)
-	{
-		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
-	}
-
+		bool operator<  (const set<T,Compare,Alloc> & lhs, const set<T,Compare,Alloc> & rhs)
+		{ return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())); };
 	template <class T, class Compare, class Alloc>
-	bool operator!= (const set<T,Compare,Alloc> & lhs, const set<T,Compare,Alloc> & rhs)
-	{
-		return (!(lhs == rhs));
-	}
-
+		bool operator!= (const set<T,Compare,Alloc> & lhs, const set<T,Compare,Alloc> & rhs)
+		{ return (!(lhs == rhs)); };
 	template <class T, class Compare, class Alloc>
-	bool operator<= (const set<T,Compare,Alloc> & lhs, const set<T,Compare,Alloc> & rhs)
-	{
-		return (!(rhs < lhs));
-	}
-
+		bool operator<= (const set<T,Compare,Alloc> & lhs, const set<T,Compare,Alloc> & rhs)
+		{ return (!(rhs < lhs)); };
 	template <class T, class Compare, class Alloc>
-	bool operator>  (const set<T,Compare,Alloc> & lhs, const set<T,Compare,Alloc> & rhs)
-	{
-		return (rhs < lhs);
-	}
-
+		bool operator>  (const set<T,Compare,Alloc> & lhs, const set<T,Compare,Alloc> & rhs)
+		{ return (rhs < lhs); };
 	template <class T, class Compare, class Alloc>
-	bool operator>= (const set<T,Compare,Alloc> & lhs, const set<T,Compare,Alloc> & rhs)
-	{
-		return (!(lhs < rhs));
-	}
-
+		bool operator>= (const set<T,Compare,Alloc> & lhs, const set<T,Compare,Alloc> & rhs)
+		{ return (!(lhs < rhs)); };
 	template <class T, class Compare, class Alloc>
-	void swap (set<T,Compare,Alloc> & x, set<T,Compare,Alloc> & y)
-	{
-		x.swap(y);
-	}
-
+		void swap (set<T,Compare,Alloc> & x, set<T,Compare,Alloc> & y)
+		{ x.swap(y); };
 }
 
 #endif
