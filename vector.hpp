@@ -312,13 +312,12 @@ namespace ft
 		if (n > this->max_size())
 			throw (std::length_error("vector::insert (fill)"));
 		size_type pos_len = &(*position) - _buffer_start;
-		if (this->size() + n < this->capacity())
+		if (this->size() + n < this->capacity() && pos_len > this->size())
 		{
 			size_type new_size = this->size() + n;
-			_current_end += n - 1;
 			for (size_type i = 0; i < this->size() - pos_len; i++)
 			{
-				_buffer_size.construct(_current_end - i, *(_current_end - i - n));
+				_buffer_size.construct(_current_end + n - i, *(_current_end - i - n));
 				_buffer_size.destroy(_current_end - i - n);
 			}
 			_current_end = &(*position);
@@ -339,8 +338,7 @@ namespace ft
 
 			if (size_type(new_end_capacity - new_start) < this->size() + n)
 			{
-				if (new_start)
-					_buffer_size.deallocate(new_start, new_end_capacity - new_start);
+				_buffer_size.deallocate(new_start, new_end_capacity - new_start);
 				next_capacity = this->size() + n;
 				new_start = _buffer_size.allocate(next_capacity);
 				new_end = new_start + this->size() + n;
@@ -355,8 +353,7 @@ namespace ft
 				_buffer_size.construct(new_end - j - 1, *(_current_end - j - 1));
 			for (size_type u = 0; u < this->size(); u++)
 				_buffer_size.destroy(_buffer_start + u);
-			if (this->capacity() > 0)
-				_buffer_size.deallocate(_buffer_start, this->capacity());
+			_buffer_size.deallocate(_buffer_start, this->capacity());
 			_buffer_start = new_start;
 			_current_end= new_end;
 			_end_of_buffer = new_end_capacity;
@@ -386,7 +383,7 @@ namespace ft
     	pointer prev_start = this->_buffer_start;
     	pointer prev_end = this->_current_end;
     	size_type prev_size = this->size();
-    	// size_type prev_capacity = this->capacity();
+    	size_type prev_capacity = this->capacity();
 
     	this->_buffer_start = this->_buffer_size.allocate(next_capacity);
     	this->_current_end = this->_buffer_start + prev_size + n;
@@ -405,7 +402,8 @@ namespace ft
     	for (size_type i = 0; i < n; ++i) {
      		this->_buffer_size.construct(this->_buffer_start + pos_at + i, *start++);
     	}
-    	// this->_buffer_size.deallocate(prev_start, prev_capacity);
+		if (prev_capacity > 0)
+    		this->_buffer_size.deallocate(prev_start, prev_capacity);
     	return;
   	}
 
