@@ -1,3 +1,4 @@
+
 #ifndef REDBLACKTREE_HPP
 #define REDBLACKTREE_HPP
 
@@ -5,23 +6,24 @@
 #include <new>
 #include <cassert>
 #include "utils.hpp"
+#include "set.hpp"
 
 namespace ft
 {
 	template <class T>
-	class Node
+	class rbNode
 	{
 		public:
 			typedef T	value_type;
 		private:
 			value_type	_data;
-			Node		*_left;
-			Node		*_right;
-			Node		*_parent;
-			Node		*_root;
+			rbNode		*_left;
+			rbNode		*_right;
+			rbNode		*_parent;
+			rbNode		*_root;
 			int			_color;
 		
-		explicit Node(const value_type& val = value_type())
+		explicit rbNode(const value_type& val = value_type())
 			:
 				_data(val),
 				_left(u_nullptr),
@@ -30,7 +32,7 @@ namespace ft
 				_root(u_nullptr),
 				_color(1)
 			{}
-		// explicit Node(const Node* _parent, const Node* _left, const Node* _right,
+		// explicit rbNode(const rbNode* _parent, const rbNode* _left, const rbNode* _right,
 		// const value_type& val = value_type())
 		// 	:
 		// 		_parent(_parent),
@@ -39,7 +41,7 @@ namespace ft
 		// 		_data(val),
 		// 		_color(1)
 		// 	{}
-		~Node()
+		~rbNode()
 		{
 			if (this->_left)
 				delete this->_left;
@@ -49,24 +51,26 @@ namespace ft
 
 		bool	isBlack() { return this->_color == 1; };
 		bool	isRed() { return this->_color == 0; };
-		Node	getRoot() { return this->_root; };
-		Node	min(Node node)
+		void	setBlack() { this->_color = 1; };
+		void	setRed() {this->_color = 0; };
+		rbNode	getRoot() { return this->_root; };
+		rbNode	min(rbNode node)
 		{
 			while (node->_left != u_nullptr)
 				node = node->_left;
 			return node;
 		}
-		Node	max(Node node)
+		rbNode	max(rbNode node)
 		{
 			while (node->_right != u_nullptr)
 				node = node->_right;
 			return node;
 		}
-		Node	successor(Node x)
+		rbNode	successor(rbNode x)
 		{
 			if (x->_right != u_nullptr)
 				return (min(x->_right));
-			Node y = x->_parent;
+			rbNode y = x->_parent;
 			while (y != u_nullptr && x == y->_right)
 			{
 				x = y;
@@ -74,11 +78,11 @@ namespace ft
 			}
 			return (y);
 		}
-		Node	predecessor(Node x)
+		rbNode	predecessor(rbNode x)
 		{
 			if (x->_left != u_nullptr)
 				return (max(x->_left));
-			Node y = x->_parent;
+			rbNode y = x->_parent;
 			while (y != u_nullptr && x == y->_left)
 			{
 				x = y;
@@ -86,7 +90,7 @@ namespace ft
 			}
 			return (y);
 		}
-		void	printHelper(Node root, std::string indent, bool last)
+		void	printHelper(rbNode root, std::string indent, bool last)
 		{
 			if (root != NULL)
 			{
@@ -113,7 +117,7 @@ namespace ft
 				printHelper(this->_root, "", true);
 		}
 
-		Node	searchElHelper(Node node, const value_type& val = value_type())
+		rbNode	searchElHelper(rbNode node, const value_type& val = value_type())
 		{
 			if (node == NULL || val == node->_data)
 				return node;
@@ -122,12 +126,12 @@ namespace ft
 			return (searchEl(node->_right, val));
 		}
 
-		Node SearchEl(const value_type& val = value_type())
+		rbNode SearchEl(const value_type& val = value_type())
 		{ return searchElHelper(this->_root, val); };
 
-		void insertFix(Node k)
+		void insertFix(rbNode *k)
 		{
-    		Node u;
+    		rbNode *u;
     		while (k->_parent->_color == 1)
 			{
     			if (k->_parent == k->_parent->_parent->_right)
@@ -180,9 +184,9 @@ namespace ft
 			_root->_color = 0;
 		}
 
-		void deleteFix(NodePtr x)
+		void deleteFix(rbNode x)
 		{
-			Node s;
+			rbNode s;
 			while (x != _root && x->_color == 0)
 			{
 				if (x == x->_parent->_left)
@@ -251,14 +255,14 @@ namespace ft
 			x->_color = 0;
 		}
 
-		void leftRotate(Node x)
+		void leftRotate(rbNode x)
 		{
-    		Node y = x->_right;
+    		rbNode y = x->_right;
     		x->_right = y->_left;
     		if (y->_left != u_nullptr)
 				y->_left->_parent = x;
     		y->_parent = x->_parent;
-    		if (x->_parent == nullptr)
+    		if (x->_parent == u_nullptr)
     			this->_root = y;
 			else if (x == x->_parent->_left)
 				x->_parent->_left = y;
@@ -268,14 +272,14 @@ namespace ft
     		x->_parent = y;
 		}
 
-  		void rightRotate(Node x)
+  		void rightRotate(rbNode x)
   		{
-  			Node y = x->_left;
+  			rbNode y = x->_left;
   			x->_left = y->_right;
   			if (y->_right != u_nullptr)
 				y->_right->_parent = x;
   			y->_parent = x->_parent;
-  			if (x->_parent == nullptr)
+  			if (x->_parent == u_nullptr)
   				this->_root = y;
   			else if (x == x->_parent->_right)
   				x->_parent->_right = y;
@@ -287,43 +291,43 @@ namespace ft
 
 		void	insert(const value_type& val = value_type())
 		{
-			Node	node = new Node;
-			node->_parent = u_nullptr;
-			node->_data = val;
-			node->_left = u_nullptr;
-			node->_right = u_nullptr;
-			node->_color = 1;
+			rbNode	node = new rbNode;
+			node._parent = u_nullptr;
+			node._data = val;
+			node._left = u_nullptr;
+			node._right = u_nullptr;
+			node._color = 1;
 
-			Node y = u_nullptr;
-			Node x = this->_root;
+			rbNode y = u_nullptr;
+			rbNode x = this->_root;
 
 			while (x != u_nullptr)
 			{
 				y = x;
-      			if (node->data < x->data)
+      			if (node.data < x->data)
         			x = x->_left;
       			else
     				x = x->_right;
 			}
-			node->_parent = y;
+			node._parent = y;
 			if (y == u_nullptr)
 				_root = node;
-			else if (node->_data < y->_data)
+			else if (node._data < y->_data)
 				y->_left = node;
 			else
 				y->_right = node;
 			
-			if (node->_parent == u_nullptr)
+			if (node._parent == u_nullptr)
 			{
-				node->_color = 0;
+				node._color = 0;
 				return ;
 			}
-			if (node->_parent->_parent == u_nullptr)
+			if (node._parent->_parent == u_nullptr)
 				return ;
 			insertFix(node);
 		}
 		
-		void rbTransplant(Node u, Node v)
+		void rbTransplant(rbNode u, rbNode v)
 		{
     		if (u->_parent == u_nullptr)
 				_root = v;
@@ -334,10 +338,10 @@ namespace ft
     		v->_parent = u->_parent;
 		}
 
-		void	deleteNodeHelper(Node node, const value_type& val = value_type())
+		void	deleterbNodeHelper(rbNode node, const value_type& val = value_type())
 		{
-			Node z = u_nullptr;
-			Node x, y;
+			rbNode z = u_nullptr;
+			rbNode x, y;
 			while (node != u_nullptr)
 			{
 				if (node->data == val)
@@ -387,8 +391,8 @@ namespace ft
 			if (y_original_color == 0)
 				deleteFix(x);
 		}
-		void deleteNode(const value_type& val = value_type())
-		{ deleteNodeHelper(this->_root, val); };
+		void deleterbNode(const value_type& val = value_type())
+		{ deleterbNodeHelper(this->_root, val); };
 	};
 }
 

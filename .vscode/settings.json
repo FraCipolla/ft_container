@@ -50,6 +50,7 @@
 		"map": "cpp",
 		"set": "cpp",
 		"__hash_table": "cpp",
-		"chrono": "cpp"
+		"chrono": "cpp",
+		"cassert": "cpp"
 	}
 }

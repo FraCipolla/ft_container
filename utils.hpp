@@ -27,6 +27,7 @@ private:
 		
 namespace ft
 {
+
 	template <class BidirectionalIterator>
 	void reverse (BidirectionalIterator first, BidirectionalIterator last)
 	{
@@ -296,6 +297,76 @@ template <class T>
         private:
             pointer _elem;
     };
+
+	template <class InputIterator1, class InputIterator2>
+	bool equal (InputIterator1 lit, InputIterator1 lend, InputIterator2 rit, InputIterator2 rend)
+	{
+		while (lit != lend)
+		{
+			if (rit == rend || *rit != *lit)
+				return (false);
+			++lit, ++rit;
+		}
+
+		return (rit == rend);
+	}
+
+	template <class InputIterator1, class InputIterator2>
+        bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1,
+                                        InputIterator2 first2, InputIterator2 last2)
+        {
+            while (first1 != last1)
+            {
+                if (first2 == last2 || *first2 < *first1) return false;
+                else if (*first1 < *first2) return true;
+                ++first1;
+                ++first2;
+            }
+            return (first2 != last2);
+        }
+    template <class InputIterator1, class InputIterator2, class Compare>
+        bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1,
+                                        InputIterator2 first2, InputIterator2 last2,
+                                        Compare comp)
+        {
+            while (first1 != last1)
+            {
+                if (first2 == last2 || comp(*first2, *first1)) return false;
+                else if (comp(*first1, *first2)) return true;
+                ++first1;
+                ++first2;
+            }
+            return (first2 != last2);
+        };
+
+	template <class T>
+	bool equal (T & a, T & b)
+	{
+		return (a == b);
+	}
+
+	template <class T, class U>
+	struct is_same { static const bool value = false; };
+
+	template <class T>
+	struct is_same<T, T> { static const bool value = true; };
+
+	template <bool B, class T = void, class U = void>
+	struct conditional {};
+
+	template <class T, class U>
+	struct conditional<true, T, U> { typedef T type; };
+
+	template <class T, class U>
+	struct conditional<false, T, U> { typedef U type; };
+
+	template <class T>
+	void swap (T & a, T & b)
+	{
+		T	tmp(a);
+		a = b;
+		b = tmp;
+	}
 }
 
 #endif
