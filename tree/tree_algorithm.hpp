@@ -7,9 +7,7 @@ namespace ft
 {
 template <typename NodePtr>
 inline bool tree_is_left_child(NodePtr ptr)
-{
-    return ptr == ptr->parent->left;
-}
+{ return ptr == ptr->parent->left; }
 
 template <typename NodePtr>
 NodePtr tree_max(NodePtr ptr)

@@ -10,30 +10,21 @@ struct pair {
     first_type first;
     second_type second;
 
-    pair()
-        : first(first_type()),
-          second(second_type())
-    {
-    }
-
-    pair(const first_type& x, const second_type& y)
-        : first(x),
-          second(y)
-    {
-    }
+    pair() : first(first_type()), second(second_type()) {}
+	pair(const first_type& x, const second_type& y) : first(x), second(y) {}
 
     template <class U1, class U2>
     pair(const pair<U1, U2>& other)
-        : first(other.first),
-          second(other.second)
-    {
-    }
+        :
+			first(other.first),
+        	second(other.second)
+		{}
 
     pair(const pair& other)
-        : first(other.first),
-          second(other.second)
-    {
-    }
+        :
+			first(other.first),
+        	second(other.second)
+		{}
 
     pair& operator=(const pair& other)
     {
@@ -45,45 +36,31 @@ struct pair {
 
 template <typename T1, typename T2>
 pair<T1, T2> make_pair(T1 x, T2 y)
-{
-    return pair<T1, T2>(x, y);
-}
+{ return pair<T1, T2>(x, y); }
 
 template <typename T1, typename T2>
 inline bool operator==(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs)
-{
-    return lhs.first == rhs.first && lhs.second == rhs.second;
-}
+{ return lhs.first == rhs.first && lhs.second == rhs.second; }
 
 template <typename T1, typename T2>
 inline bool operator!=(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs)
-{
-    return !(lhs == rhs);
-}
+{ return !(lhs == rhs); }
 
 template <typename T1, typename T2>
 inline bool operator<(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs)
-{
-    return (lhs.first < rhs.first) || (!(rhs.first < lhs.first) && lhs.second < rhs.second);
-}
+{ return (lhs.first < rhs.first) || (!(rhs.first < lhs.first) && lhs.second < rhs.second); }
 
 template <typename T1, typename T2>
 inline bool operator<=(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs)
-{
-    return !(rhs < lhs);
-}
+{ return !(rhs < lhs); }
 
 template <typename T1, typename T2>
 inline bool operator>(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs)
-{
-    return rhs < lhs;
-}
+{ return rhs < lhs; }
 
 template <typename T1, typename T2>
 inline bool operator>=(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs)
-{
-    return !(lhs < rhs);
-}
+{ return !(lhs < rhs); }
 
 template <typename InputIt1, typename InputIt2>
 bool equal(InputIt1 first1, InputIt1 last1, InputIt2 first2)
