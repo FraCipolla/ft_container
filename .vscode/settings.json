@@ -51,6 +51,7 @@
 		"set": "cpp",
 		"__hash_table": "cpp",
 		"chrono": "cpp",
-		"cassert": "cpp"
+		"cassert": "cpp",
+		"*.ipp": "cpp"
 	}
 }

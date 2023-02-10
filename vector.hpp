@@ -355,6 +355,55 @@ private:
         }
     }
 
+	// template <typename ForwardIt>
+    // void range_insert(iterator position, ForwardIt start, ForwardIt finish, std::forward_iterator_tag)
+	// {
+	// 	if (start == finish)
+	// 		return ;
+	// 		size_type pos_at = &(*position) - this->start_;
+	// 		const size_type n = std::distance(start, finish);
+
+    // 	if (this->capacity() >= this->size() + n) {
+    //   		for (size_type i = 0; i < this->size() - pos_at; ++i) {
+    //     		this->alloc_.construct(this->end_ + n - i, *(this->end_ - i));
+    //     		this->alloc_.destroy(this->end_ - i);
+    //   		}
+    //   		this->end_ = this->start_ + this->size() + n;
+    //   		for (size_type i = 0; i < n; ++i) {
+    //     		this->alloc_.construct(this->start_ + pos_at + i, *start++);
+    //   		}
+    //   		return;
+    // 	}
+
+   	// 	size_type next_capacity = this->size() + n;
+
+    // 	pointer prev_start = this->start_;
+    // 	pointer prev_end = this->end_;
+    // 	size_type prev_size = this->size();
+    // 	size_type prev_capacity = this->capacity();
+
+    // 	this->start_ = this->alloc_.allocate(next_capacity);
+    // 	this->end_ = this->start_ + prev_size + n;
+    // 	this->end_cap_ = this->end_;
+
+    // 	for (size_type i = 0; i < pos_at; ++i) {
+    // 		this->alloc_.construct(this->start_ + i, *(prev_start + i));
+    // 		this->alloc_.destroy(prev_start + i);
+    // 	}
+
+    // 	for (size_type i = 0; i < prev_size - pos_at; ++i) {
+    // 		this->alloc_.construct(this->end_ - i - 1, *(prev_end - i - 1));
+    // 		this->alloc_.destroy(prev_end - i - 1);
+    // 	}
+
+    // 	for (size_type i = 0; i < n; ++i) {
+    //  		this->alloc_.construct(this->start_ + pos_at + i, *start++);
+    // 	}
+	// 	if (prev_capacity > 0)
+    // 		this->alloc_.deallocate(prev_start, prev_capacity);
+    // 	return;
+  	// }
+
     template <typename ForwardIt>
     void range_insert(iterator pos, ForwardIt first, ForwardIt last, std::forward_iterator_tag)
     {
@@ -477,10 +526,6 @@ private:
 };
 
 template <typename T, typename Alloc>
-inline void swap(vector<T, Alloc>& x, vector<T, Alloc>& y)
-{ x.swap(y); }
-
-template <typename T, typename Alloc>
 inline bool operator==(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs)
 { return (lhs.size() == rhs.size()) && ft::equal(lhs.begin(), lhs.end(), rhs.begin()); }
 
@@ -505,3 +550,10 @@ inline bool operator>=(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs)
 { return !(lhs < rhs); }
 
 } // namespace ft
+
+namespace std
+{
+	template <typename T, typename Alloc>
+		inline void swap(ft::vector<T, Alloc>& x, ft::vector<T, Alloc>& y)
+			{x.swap(y); }
+};
