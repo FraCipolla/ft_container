@@ -10,6 +10,17 @@
 #include "utility.hpp"
 #include "vector_iterator.hpp"
 
+
+
+
+
+
+
+
+#include <iostream>
+#include<stdlib.h>
+#include<string.h>
+
 namespace ft
 {
 template <typename T, typename Allocator = std::allocator<T> >
@@ -355,55 +366,6 @@ private:
         }
     }
 
-	// template <typename ForwardIt>
-    // void range_insert(iterator position, ForwardIt start, ForwardIt finish, std::forward_iterator_tag)
-	// {
-	// 	if (start == finish)
-	// 		return ;
-	// 		size_type pos_at = &(*position) - this->start_;
-	// 		const size_type n = std::distance(start, finish);
-
-    // 	if (this->capacity() >= this->size() + n) {
-    //   		for (size_type i = 0; i < this->size() - pos_at; ++i) {
-    //     		this->alloc_.construct(this->end_ + n - i, *(this->end_ - i));
-    //     		this->alloc_.destroy(this->end_ - i);
-    //   		}
-    //   		this->end_ = this->start_ + this->size() + n;
-    //   		for (size_type i = 0; i < n; ++i) {
-    //     		this->alloc_.construct(this->start_ + pos_at + i, *start++);
-    //   		}
-    //   		return;
-    // 	}
-
-   	// 	size_type next_capacity = this->size() + n;
-
-    // 	pointer prev_start = this->start_;
-    // 	pointer prev_end = this->end_;
-    // 	size_type prev_size = this->size();
-    // 	size_type prev_capacity = this->capacity();
-
-    // 	this->start_ = this->alloc_.allocate(next_capacity);
-    // 	this->end_ = this->start_ + prev_size + n;
-    // 	this->end_cap_ = this->end_;
-
-    // 	for (size_type i = 0; i < pos_at; ++i) {
-    // 		this->alloc_.construct(this->start_ + i, *(prev_start + i));
-    // 		this->alloc_.destroy(prev_start + i);
-    // 	}
-
-    // 	for (size_type i = 0; i < prev_size - pos_at; ++i) {
-    // 		this->alloc_.construct(this->end_ - i - 1, *(prev_end - i - 1));
-    // 		this->alloc_.destroy(prev_end - i - 1);
-    // 	}
-
-    // 	for (size_type i = 0; i < n; ++i) {
-    //  		this->alloc_.construct(this->start_ + pos_at + i, *start++);
-    // 	}
-	// 	if (prev_capacity > 0)
-    // 		this->alloc_.deallocate(prev_start, prev_capacity);
-    // 	return;
-  	// }
-
     template <typename ForwardIt>
     void range_insert(iterator pos, ForwardIt first, ForwardIt last, std::forward_iterator_tag)
     {
@@ -428,6 +390,7 @@ private:
                     std::copy(first, mid, pos);
                 }
             } else {
+
                 const size_type new_size = calculate_growth(count);
                 pointer new_start = alloc_.allocate(new_size);
                 pointer new_end = new_start;
