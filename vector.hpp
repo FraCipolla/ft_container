@@ -489,6 +489,12 @@ private:
 };
 
 template <typename T, typename Alloc>
+inline void swap(vector<T, Alloc>& x, vector<T, Alloc>& y)
+{
+    x.swap(y);
+}
+
+template <typename T, typename Alloc>
 inline bool operator==(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs)
 { return (lhs.size() == rhs.size()) && ft::equal(lhs.begin(), lhs.end(), rhs.begin()); }
 
@@ -513,10 +519,3 @@ inline bool operator>=(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs)
 { return !(lhs < rhs); }
 
 } // namespace ft
-
-namespace std
-{
-	template <typename T, typename Alloc>
-		inline void swap(ft::vector<T, Alloc>& x, ft::vector<T, Alloc>& y)
-			{x.swap(y); }
-};
